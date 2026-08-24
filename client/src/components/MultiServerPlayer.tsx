@@ -1,11 +1,15 @@
-import { ArrowLeft, Clapperboard, Info, Loader2 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { AlertTriangle, ArrowLeft, Clapperboard, Info, Loader2, ShieldCheck } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "wouter";
+import { toast } from "sonner";
 import type { TitleDetails } from "@shared/catalog";
 import { trpc } from "@/lib/trpc";
 import { EMBED_SERVERS, parseTitleId } from "@/lib/embedServers";
 import { saveContinueWatching } from "@/lib/localLibrary";
 import { useLanguage } from "@/lib/i18n";
+
+const IFRAME_SANDBOX = "allow-scripts allow-same-origin allow-forms allow-presentation";
+const LOAD_TIMEOUT_MS = 15000;
 
 function readQueryNumber(name: string) {
   const value = Number(new URLSearchParams(window.location.search).get(name));
@@ -19,8 +23,12 @@ export function MultiServerPlayer({ title }: { title: TitleDetails }) {
 
   const [serverIndex, setServerIndex] = useState(0);
   const [cinemaMode, setCinemaMode] = useState(false);
+  const [shieldOn, setShieldOn] = useState(true);
+  const [iframeLoaded, setIframeLoaded] = useState(false);
   const [seasonNumber, setSeasonNumber] = useState<number | null>(() => (isSeries ? readQueryNumber("season") ?? null : null));
   const [episodeNumber, setEpisodeNumber] = useState<number | null>(() => (isSeries ? readQueryNumber("episode") ?? null : null));
+  const failedServersRef = useRef(new Set<number>());
+  const [failedServers, setFailedServers] = useState<number[]>([]);
 
   useEffect(() => {
     if (!isSeries) return;
@@ -51,6 +59,47 @@ export function MultiServerPlayer({ title }: { title: TitleDetails }) {
     if (parsed.mediaType === "tv" && (!seasonNumber || !episodeNumber)) return null;
     return EMBED_SERVERS[serverIndex].buildUrl(parsed.mediaType, parsed.tmdbId, seasonNumber ?? undefined, episodeNumber ?? undefined);
   }, [parsed, serverIndex, seasonNumber, episodeNumber]);
+
+  useEffect(() => {
+    setShieldOn(true);
+    setIframeLoaded(false);
+  }, [serverIndex, embedUrl]);
+
+  useEffect(() => {
+    if (iframeLoaded) return;
+    const timer = window.setTimeout(() => {
+      toast.warning(t("player.timeout", { n: serverIndex + 1 }), {
+        description: t("shield.armed"),
+        action: { label: t("player.switchAction"), onClick: () => advanceServer("timeout") },
+      });
+    }, LOAD_TIMEOUT_MS);
+    return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [iframeLoaded, serverIndex, embedUrl]);
+
+  function markFailed(index: number) {
+    failedServersRef.current.add(index);
+    setFailedServers(Array.from(failedServersRef.current));
+  }
+
+  function advanceServer(reason: "error" | "timeout") {
+    const total = EMBED_SERVERS.length;
+    const next = Array.from({ length: total }, (_, offset) => (serverIndex + 1 + offset) % total)
+      .find(index => !failedServersRef.current.has(index));
+    if (next === undefined) {
+      toast.error(t("player.allFailed"));
+      return;
+    }
+    if (reason === "error") {
+      markFailed(serverIndex);
+      toast.info(t("player.errorSwitch", { n: serverIndex + 1, m: next + 1 }));
+    }
+    setServerIndex(next);
+  }
+
+  function handleIframeError() {
+    advanceServer("error");
+  }
 
   useEffect(() => {
     if (!parsed || !embedUrl) return;
@@ -86,7 +135,7 @@ export function MultiServerPlayer({ title }: { title: TitleDetails }) {
         <div className="player-topbar">
           <Link href={`/title/${title.id}`} className="player-back"><ArrowLeft size={17} /> {t("player.back")}</Link>
           <span>{title.title}{currentEpisode ? ` · ${t("player.episode")} ${currentEpisode.episodeNumber}: ${currentEpisode.name}` : ""}</span>
-          <span className="player-secure">{activeServer.name}</span>
+          <span className="player-secure"><ShieldCheck size={13} /> {activeServer.name}</span>
           <button
             type="button"
             className={cinemaMode ? "cinema-button cinema-button--on" : "cinema-button"}
@@ -99,7 +148,31 @@ export function MultiServerPlayer({ title }: { title: TitleDetails }) {
         </div>
         <div className="video-frame">
           {embedUrl
-            ? <iframe key={`${activeServer.id}:${embedUrl}`} className="official-embed" src={embedUrl} title={`Player ${title.title}`} allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowFullScreen referrerPolicy="origin" />
+            ? <>
+              <iframe
+                key={`${activeServer.id}:${embedUrl}`}
+                className="official-embed"
+                src={embedUrl}
+                title={`Player ${title.title}`}
+                sandbox={IFRAME_SANDBOX}
+                allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+                allowFullScreen
+                referrerPolicy="origin"
+                onLoad={() => setIframeLoaded(true)}
+                onError={handleIframeError}
+              />
+              {shieldOn && (
+                <div
+                  className="player-shield"
+                  role="button"
+                  aria-label={t("shield.armed")}
+                  onClick={() => setShieldOn(false)}
+                >
+                  <span className="player-shield__hint"><ShieldCheck size={14} /> {t("shield.hint")}</span>
+                </div>
+              )}
+              {!shieldOn && <span className="player-shield__badge"><ShieldCheck size={12} /> {t("shield.armed")}</span>}
+            </>
             : <div className="player-overlay"><Loader2 className="animate-spin" size={25} /><span>{t("player.building")}</span></div>}
         </div>
         <p className="player-note">{t("player.via", { server: activeServer.name })}</p>
@@ -112,9 +185,14 @@ export function MultiServerPlayer({ title }: { title: TitleDetails }) {
             type="button"
             role="tab"
             aria-selected={index === serverIndex}
-            className={index === serverIndex ? "server-tab glass server-tab--active" : "server-tab glass"}
-            onClick={() => setServerIndex(index)}
+            className={[
+              "server-tab glass",
+              index === serverIndex ? "server-tab--active" : "",
+              failedServers.includes(index) ? "server-tab--warn" : "",
+            ].filter(Boolean).join(" ")}
+            onClick={() => { failedServersRef.current.delete(index); setFailedServers(Array.from(failedServersRef.current)); setServerIndex(index); }}
           >
+            {failedServers.includes(index) && index !== serverIndex ? <AlertTriangle size={12} /> : null}
             {t("server.n", { n: index + 1 })}<small>{server.name}</small>
           </button>
         ))}
