@@ -8,7 +8,6 @@ import { EMBED_SERVERS, parseTitleId } from "@/lib/embedServers";
 import { saveContinueWatching } from "@/lib/localLibrary";
 import { useLanguage } from "@/lib/i18n";
 
-const IFRAME_SANDBOX = "allow-scripts allow-same-origin allow-forms allow-presentation";
 const LOAD_TIMEOUT_MS = 15000;
 
 function readQueryNumber(name: string) {
@@ -154,7 +153,6 @@ export function MultiServerPlayer({ title }: { title: TitleDetails }) {
                 className="official-embed"
                 src={embedUrl}
                 title={`Player ${title.title}`}
-                sandbox={IFRAME_SANDBOX}
                 allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
                 allowFullScreen
                 referrerPolicy="origin"
