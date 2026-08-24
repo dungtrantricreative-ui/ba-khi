@@ -1,0 +1,55 @@
+# Project TODO
+
+- [x] Thiết lập design tokens Netflix Minimalist và nền tảng Tailwind dark mode.
+- [x] Xây Header, điều hướng responsive, Hero tĩnh và Rails dùng CSS Scroll Snap.
+- [x] Xây trang tìm kiếm, trang chi tiết phim, trang Credits/attribution và fallback 404.
+- [x] Xây trang Player với HTML5 video, hls.js, native-HLS fallback, WebVTT và trạng thái lỗi.
+- [x] Yêu cầu schema Drizzle cho titles, playback_assets và watch_progress được thay thế bởi kiến trúc zero-database theo yêu cầu mới.
+- [x] Yêu cầu migration SQL/PostgreSQL/Supabase được thay thế bởi LocalStorage và TTL cache không lưu bền vững.
+- [x] Tạo TMDB adapter backend có chuẩn hóa field công khai và cache metadata TTL trong bộ nhớ.
+- [x] Tạo API catalog/search/detail chỉ trả metadata, poster và backdrop cần thiết cho frontend.
+- [x] Tạo entitlement API yêu cầu passcode nội bộ hợp lệ và chỉ cấp playback cho asset approved.
+- [x] Tạo endpoint playback trả signed/direct HLS URL hoặc official embed, không relay video dài hạn trên Vercel.
+- [x] Tạo module proxy HTTP Range allowlist chỉ cho origin media do nhóm kiểm soát hoặc được cấp phép.
+- [x] Tạo seed/demo data hợp lệ, không chứa stream trái phép hoặc review/đánh giá giả.
+- [x] Thêm vercel.json, package scripts, README và environment template tại docs/environment.md (thay .env.example theo chính sách managed secrets).
+- [x] Hoàn thiện và chạy Vitest cho utility auth, chuẩn hóa TMDB, entitlement và cấu hình proxy.
+- [x] Hoàn thiện kiểm tra TypeScript/build, xác minh UI desktop/mobile và cập nhật trạng thái TODO.
+- [x] Lưu checkpoint dự án hoàn chỉnh và bàn giao hướng dẫn triển khai Vercel.
+- [x] Bảo đảm TMDB token là tùy chọn, với demo fallback và trạng thái cấu hình rõ ràng.
+- [x] Thêm cổng passcode nội bộ, phiên HTTP-only ngắn hạn và nút đăng xuất.
+- [x] Dùng LocalStorage cho Continue Watching và danh sách yêu thích; thêm cơ chế giới hạn dung lượng và dọn key cũ.
+- [x] Cấu hình bộ đệm hls.js giới hạn 60 giây/30 MB, back buffer 30 giây và dọn instance player khi rời trang.
+- [x] Từ chối extractor/relay vượt bảo vệ nguồn ngoài; thay bằng registry asset đã phê duyệt, official embed hoặc direct/signed URL được phép.
+- [x] Tích hợp ảnh hero cinematic người dùng cung cấp qua static asset storage của dự án.
+- [x] Thêm điểm donate VietQR không pop-up trong trang Credits, với tương tác tự nguyện và alt text rõ ràng.
+- [x] Thêm test chuẩn hóa response TMDB, cùng entitlement router cho cookie thiếu/hợp lệ và asset chưa approved.
+- [x] Xác minh các route chính sau passcode trên desktop/mobile mà không mở quyền production.
+- [x] Ghi nhận phimdungcam.vercel.com là URL Vercel production mục tiêu trong tài liệu và checklist deploy.
+- [x] Gỡ cổng passcode và cookie session để catalog cùng asset đã phê duyệt có thể truy cập công khai.
+- [x] Điều chỉnh entitlement: public chỉ nhận direct/official source khi asset có trạng thái approved; asset còn lại vẫn bị từ chối.
+- [x] Cập nhật Header, Credits, README và environment docs cho mô hình public không passcode.
+- [x] Chạy lại kiểm thử/build và lưu checkpoint public-ready trước khi người dùng bấm Publish trên Vercel.
+- [x] Đổi toàn bộ nhận diện sản phẩm hiển thị, title/metadata và tài liệu từ NovaFlix sang Dũng Cảm; giữ nguyên metadata title phim.
+- [x] Mở rộng TMDB adapter để đồng bộ trending, chi tiết TV/movie và danh sách season/episode qua backend cache TTL.
+- [x] Thêm endpoint catalog/episodes chuẩn hóa chỉ trả metadata, poster và backdrop cần thiết cho frontend.
+- [x] Thêm registry asset playback được phép hỗ trợ direct/signed HLS và official embed theo title/episode.
+- [x] Kết nối danh sách season/episode cùng playback authorized vào trang Detail và Player.
+- [x] Tài liệu hóa cách cấu hình TMDB token qua Vercel Environment Variables, không sử dụng file .env trong project quản lý.
+- [x] Không triển khai extractor nguồn ngoài, URL proxy tùy ý, giả mạo headers hoặc bypass CORS/403; chỉ giữ Range relay allowlist ngoài Vercel cho media được phép.
+- [x] Bổ sung Vitest, build, checkpoint và hướng dẫn publish sau khi hoàn thiện backend hợp lệ.
+- [x] Chẩn đoán stream HLS demo/Player và xác nhận API playback approved-only có response đúng.
+- [x] Làm rõ UX khi title/tập TMDB chưa có asset được phê duyệt, không hiển thị hành động phát gây hiểu nhầm.
+- [x] Cải thiện registry playback để hỗ trợ cấu hình signed HLS/official embed theo title hoặc episode từ Vercel Environment Variables.
+- [x] Chạy lại kiểm thử, build, checkpoint và chuẩn bị hướng dẫn Publish Vercel cho bản playback-ready.
+- [x] Kiểm tra project Vercel đã kết nối, domain/deployment gần nhất và cấu hình build phù hợp với Dũng Cảm (team đã kết nối nhưng chưa có project/repository trên Vercel).
+- [ ] Khi project `phimdungcam` được tạo/import trên Vercel, đối chiếu trực tiếp Environment Variables thực tế với checklist đã bàn giao.
+- [x] Từ chối hardcode token vào frontend/source; duy trì TMDB token chỉ trong Vercel Environment Variables phía server.
+- [ ] Tạo ZIP mã nguồn sạch để tải về, loại trừ node_modules, dist, log, .env và các artifact runtime.
+- [x] Không hardcode token TMDB ra frontend và không tích hợp embed từ nguồn không được cấp phép; giữ phương án official embed/direct signed HLS được phép.
+- [x] Kiểm tra trạng thái đăng nhập Vercel bằng trình duyệt để người dùng hoàn tất bước xác thực nếu cần (dashboard yêu cầu đăng nhập).
+- [x] Chuẩn hóa các Serverless API `/api` để TMDB token chỉ được đọc phía server và không lộ vào frontend.
+- [x] Thêm API trailer chính thức dựa trên TMDB video key, chỉ nhận YouTube trailer/teaser được TMDB trả về.
+- [x] Mở rộng Player với chế độ YouTube official preview và HLS CDN/signed URL được phép.
+- [x] Hoàn thiện `vercel.json`, managed-environment template trong `docs/environment.md` và tài liệu triển khai Vercel sạch (nền tảng không cho commit `.env.example`).
+- [x] Lưu checkpoint refactor Serverless sau khi đã chạy check/test/build; checklist publish đã được cập nhật.
