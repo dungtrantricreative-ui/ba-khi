@@ -4,9 +4,8 @@ Nền tảng xem phim trực tuyến giao diện **Liquid Glass** trên nền Ne
 
 ## Tính năng
 
-- 🎬 **Multi-Server Player**: VidLink · VidSrc · 2Embed · AutoEmbed — tự dựng URL theo TMDB ID, đổi server/tập không reload
-- 🛡️ **Smart Shield**: lớp khiên chặn pop-up — lần chạm đầu hấp thụ trigger quảng cáo ẩn của iframe, lần 2 phát thật
-- 🔒 **Sandbox chặt chẽ**: `allow-scripts allow-same-origin allow-forms allow-presentation` — loại bỏ `allow-popups` và `allow-top-navigation` để chặn triệt để pop-up & chuyển hướng trang
+- 🎬 **Multi-Server Player**: VidSrc là server mặc định; VidLink · 2Embed · AutoEmbed là các nguồn dự phòng — tự dựng URL theo TMDB ID, đổi server/tập không reload
+- 🧭 **Playback controls**: player mở trực tiếp iframe, không còn lớp phủ, nút chạm hoặc nhãn Smart Shield che khuất vùng xem
 - 🔄 **Auto-failover**: server lỗi → tự chuyển server kế tiếp + toast thông báo; tab server cảnh báo vàng
 - 🌐 **Song ngữ VI/EN theo IP**: VN → tiếng Việt, quốc gia khác → English (header `x-vercel-ip-country`), kèm nút đổi tay; metadata TMDB đổi theo ngôn ngữ
 - 🎞️ **Hero carousel**: banner tự cuộn 6 phim đề xuất mỗi 7 giây, chấm điều hướng
@@ -36,7 +35,7 @@ Vercel Git Integration: connect repo này → mỗi `git push` tự động depl
 ## Cấu trúc chính
 
 ```
-client/src/components/MultiServerPlayer.tsx   # player + shield + failover
+client/src/components/MultiServerPlayer.tsx   # player + VidSrc default + failover
 client/src/lib/embedServers.ts                # 4 server + parseTitleId
 client/src/lib/i18n.tsx                       # provider VI/EN + geo detect
 server/catalog.ts                             # TMDB facade + cache + rails

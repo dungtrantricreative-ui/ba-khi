@@ -9,20 +9,20 @@ export interface EmbedServer {
 /** Danh sách server dự phòng. Thứ tự trong mảng = thứ tự nút bấm (Server 1 → Server 4). */
 export const EMBED_SERVERS: EmbedServer[] = [
   {
-    id: "vidlink",
-    name: "VidLink",
-    buildUrl: (mediaType, tmdbId, season, episode) =>
-      mediaType === "movie"
-        ? `https://vidlink.pro/movie/${tmdbId}`
-        : `https://vidlink.pro/tv/${tmdbId}/${season}/${episode}`,
-  },
-  {
     id: "vidsrc",
     name: "VidSrc",
     buildUrl: (mediaType, tmdbId, season, episode) =>
       mediaType === "movie"
         ? `https://vidsrc.to/embed/movie/${tmdbId}`
         : `https://vidsrc.to/embed/tv/${tmdbId}/${season}/${episode}`,
+  },
+  {
+    id: "vidlink",
+    name: "VidLink",
+    buildUrl: (mediaType, tmdbId, season, episode) =>
+      mediaType === "movie"
+        ? `https://vidlink.pro/movie/${tmdbId}`
+        : `https://vidlink.pro/tv/${tmdbId}/${season}/${episode}`,
   },
   {
     id: "2embed",
