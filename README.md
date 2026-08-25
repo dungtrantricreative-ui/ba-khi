@@ -1,6 +1,6 @@
-# DŨNG CẢM — Xem Phim Phải Dũng Cảm
+# BÁ KHÍ — Xem Phim Phải Bá Khí
 
-Nền tảng xem phim trực tuyến giao diện **Liquid Glass** trên nền Netflix dark, phát qua hệ thống **đa server iFrame** (4 nguồn dự phòng) theo TMDB ID.
+Bá Khí là nền tảng xem phim trực tuyến giao diện **Liquid Glass** trên nền Netflix dark, phát qua hệ thống **đa server iFrame** (4 nguồn dự phòng) theo TMDB ID.
 
 ## Tính năng
 

@@ -19,7 +19,7 @@ Use title keys such as `tmdb-movie-123` and episode keys such as `tmdb-tv-456:s1
     "kind": "hls",
     "url": "https://cdn.example.com/films/123/master.m3u8?signature=...",
     "captionsUrl": "https://cdn.example.com/films/123/vi.vtt?signature=...",
-    "providerLabel": "Dũng Cảm licensed CDN"
+    "providerLabel": "Bá Khí licensed CDN"
   },
   "tmdb-tv-456:s1:e2": {
     "kind": "embed",
@@ -43,4 +43,4 @@ The React client normally uses tRPC. For a serverless-friendly REST integration,
 | `/api/tmdb?resource=episodes&id=tmdb-tv-456&season=1` | Normalized season episodes. |
 | `/api/tmdb?resource=trailer&id=tmdb-movie-123` | An official YouTube Trailer/Teaser key, if TMDB provides one. |
 
-At `/watch/:id`, Dũng Cảm chooses a signed/direct HLS or official provider embed from the approved registry first. If no such asset exists, it falls back only to the official YouTube preview returned by TMDB; it does not present that preview as a full movie or episode.
+At `/watch/:id`, Bá Khí chooses a signed/direct HLS or official provider embed from the approved registry first. If no such asset exists, it falls back only to the official YouTube preview returned by TMDB; it does not present that preview as a full movie or episode.

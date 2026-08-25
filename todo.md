@@ -25,12 +25,12 @@
 - [x] Thêm điểm donate VietQR không pop-up trong trang Credits, với tương tác tự nguyện và alt text rõ ràng.
 - [x] Thêm test chuẩn hóa response TMDB, cùng entitlement router cho cookie thiếu/hợp lệ và asset chưa approved.
 - [x] Xác minh các route chính sau passcode trên desktop/mobile mà không mở quyền production.
-- [x] Ghi nhận phimdungcam.vercel.com là URL Vercel production mục tiêu trong tài liệu và checklist deploy.
+- [x] Ghi nhận Vercel production là mục tiêu triển khai của Bá Khí trong tài liệu và checklist deploy.
 - [x] Gỡ cổng passcode và cookie session để catalog cùng asset đã phê duyệt có thể truy cập công khai.
 - [x] Điều chỉnh entitlement: public chỉ nhận direct/official source khi asset có trạng thái approved; asset còn lại vẫn bị từ chối.
 - [x] Cập nhật Header, Credits, README và environment docs cho mô hình public không passcode.
 - [x] Chạy lại kiểm thử/build và lưu checkpoint public-ready trước khi người dùng bấm Publish trên Vercel.
-- [x] Đổi toàn bộ nhận diện sản phẩm hiển thị, title/metadata và tài liệu từ NovaFlix sang Dũng Cảm; giữ nguyên metadata title phim.
+- [x] Đổi toàn bộ nhận diện sản phẩm hiển thị, title/metadata và tài liệu sang Bá Khí; giữ nguyên metadata title phim.
 - [x] Mở rộng TMDB adapter để đồng bộ trending, chi tiết TV/movie và danh sách season/episode qua backend cache TTL.
 - [x] Thêm endpoint catalog/episodes chuẩn hóa chỉ trả metadata, poster và backdrop cần thiết cho frontend.
 - [x] Thêm registry asset playback được phép hỗ trợ direct/signed HLS và official embed theo title/episode.
@@ -42,8 +42,8 @@
 - [x] Làm rõ UX khi title/tập TMDB chưa có asset được phê duyệt, không hiển thị hành động phát gây hiểu nhầm.
 - [x] Cải thiện registry playback để hỗ trợ cấu hình signed HLS/official embed theo title hoặc episode từ Vercel Environment Variables.
 - [x] Chạy lại kiểm thử, build, checkpoint và chuẩn bị hướng dẫn Publish Vercel cho bản playback-ready.
-- [x] Kiểm tra project Vercel đã kết nối, domain/deployment gần nhất và cấu hình build phù hợp với Dũng Cảm (team đã kết nối nhưng chưa có project/repository trên Vercel).
-- [ ] Khi project `phimdungcam` được tạo/import trên Vercel, đối chiếu trực tiếp Environment Variables thực tế với checklist đã bàn giao.
+- [x] Kiểm tra project Vercel đã kết nối, domain/deployment gần nhất và cấu hình build phù hợp với Bá Khí.
+- [ ] Khi project Bá Khí được tạo/import trên Vercel, đối chiếu trực tiếp Environment Variables thực tế với checklist đã bàn giao.
 - [x] Từ chối hardcode token vào frontend/source; duy trì TMDB token chỉ trong Vercel Environment Variables phía server.
 - [ ] Tạo ZIP mã nguồn sạch để tải về, loại trừ node_modules, dist, log, .env và các artifact runtime.
 - [x] Không hardcode token TMDB ra frontend và không tích hợp embed từ nguồn không được cấp phép; giữ phương án official embed/direct signed HLS được phép.
