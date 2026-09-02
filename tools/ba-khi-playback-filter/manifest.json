@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Ba Khi Playback Filter Test",
+  "version": "0.0.1",
+  "description": "Temporary test only: block confirmed tracker/ad hosts while preserving the player host.",
+  "permissions": ["declarativeNetRequest"],
+  "host_permissions": ["https://vidlink.pro/*", "https://mc.yandex.ru/*", "https://www.googletagmanager.com/*", "https://tagivi.com/*", "https://llvpn.com/*"],
+  "declarative_net_request": {
+    "rule_resources": [{"id":"rules","enabled":true,"path":"rules.json"}]
+  }
+}
