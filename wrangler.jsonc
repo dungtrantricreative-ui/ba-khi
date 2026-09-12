@@ -1,11 +1,1 @@
-{
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "simpapa",
-  "compatibility_date": "2026-09-11",
-  "observability": {
-    "enabled": true
-  },
-  "assets": {
-    "not_found_handling": "single-page-application"
-  }
-}
+{"$schema": "node_modules/wrangler/config-schema.json", "name": "simpapa", "compatibility_date": "2026-09-11", "pages_build_output_dir": "dist/public", "observability": {"enabled": true}}

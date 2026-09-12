@@ -1,5 +1,1 @@
-{
-  "version": 1,
-  "include": ["/api/*"],
-  "exclude": ["/assets/*", "/favicon.ico"]
-}
+﻿{"version": 1, "include": ["/*"], "exclude": ["/assets/*", "/favicon.ico"]}
