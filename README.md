@@ -28,6 +28,17 @@ pnpm check    # typecheck
 
 ## Deploy
 
+### Cloudflare Pages (Hiện tại)
+```bash
+# Tạo dự án (lần đầu)
+npx wrangler pages project create simpapa --production-branch master --force
+
+# Deploy
+npx wrangler pages deploy dist/public --project-name simpapa
+```
+Dự án sẽ có sẵn tại [https://simpapa.pages.dev](https://simpapa.pages.dev).
+
+### Vercel
 Vercel Git Integration: connect repo này → mỗi `git push` tự động deploy production.
 
 > ⚠️ Repo **private** vì chứa TMDB read token nhúng trong `server/catalog.ts` (`BUNDLED_TMDB_READ_TOKEN`). Không chuyển sang public nếu chưa chuyển token sang environment variable.
