@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development tsx watch server/_core/index.ts",
-    "build": "vite build && esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
-    "vercel-build": "pnpm build",
+    "build": "vite build && esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist && copy _routes.json dist/public\\_routes.json 2>nul & powershell -Command \"Copy-Item -Path 'functions' -Destination 'dist/public\\functions' -Recurse -Force\" 2>nul",
+    "deploy:cloudflare": "pnpm build && npx wrangler pages deploy dist/public --project-name simpapa",
     "start": "NODE_ENV=production node dist/index.js",
     "check": "tsc --noEmit",
     "format": "prettier --write .",
