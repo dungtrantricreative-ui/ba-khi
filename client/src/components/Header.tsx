@@ -14,7 +14,7 @@ export function Header() {
   return (
     <header className="site-header">
       <div className="site-header__inner">
-        <Link href="/" className="wordmark" aria-label={t("wordmark.aria")}><span className="wordmark__red">DŨNG</span><span className="wordmark__light">CẢM</span></Link>
+        <Link href="/" className="wordmark" aria-label={t("wordmark.aria")}>SIMPAPA</Link>
         <nav className={`main-nav ${isOpen ? "main-nav--open" : ""}`} aria-label={t("nav.aria")}>
           <Link href="/" className={linkClass("/")}>{t("nav.home")}</Link>
           <Link href="/search" className={linkClass("/search")}>{t("nav.discover")}</Link>

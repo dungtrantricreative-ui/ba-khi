@@ -23,6 +23,7 @@ export function MultiServerPlayer({ title }: { title: TitleDetails }) {
   const [serverIndex, setServerIndex] = useState(0);
   const [cinemaMode, setCinemaMode] = useState(false);
   const [iframeLoaded, setIframeLoaded] = useState(false);
+  const [adShieldVisible, setAdShieldVisible] = useState(true);
   const [seasonNumber, setSeasonNumber] = useState<number | null>(() => (isSeries ? readQueryNumber("season") ?? null : null));
   const [episodeNumber, setEpisodeNumber] = useState<number | null>(() => (isSeries ? readQueryNumber("episode") ?? null : null));
   const failedServersRef = useRef(new Set<number>());
@@ -60,6 +61,7 @@ export function MultiServerPlayer({ title }: { title: TitleDetails }) {
 
   useEffect(() => {
     setIframeLoaded(false);
+    setAdShieldVisible(true);
   }, [serverIndex, embedUrl]);
 
   useEffect(() => {
@@ -95,6 +97,10 @@ export function MultiServerPlayer({ title }: { title: TitleDetails }) {
 
   function handleIframeError() {
     advanceServer("error");
+  }
+
+  function handleAdShieldClick() {
+    setAdShieldVisible(false);
   }
 
   useEffect(() => {
@@ -156,6 +162,16 @@ export function MultiServerPlayer({ title }: { title: TitleDetails }) {
                 onLoad={() => setIframeLoaded(true)}
                 onError={handleIframeError}
               />
+              {adShieldVisible && (
+                <div
+                  className="ad-shield-overlay"
+                  onClick={handleAdShieldClick}
+                  onTouchStart={handleAdShieldClick}
+                  role="button"
+                  aria-label="Dismiss ad shield and start playing"
+                  tabIndex={0}
+                />
+              )}
             </>
             : <div className="player-overlay"><Loader2 className="animate-spin" size={25} /><span>{t("player.building")}</span></div>}
         </div>
