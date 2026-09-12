@@ -185,13 +185,18 @@ async function handleTmdb(request, url) {
         tmdb('/movie/popular', {}),
         tmdb('/tv/popular', {}),
       ]);
-      return { source: 'tmdb', hero: trending[0] || movieItems[0] || { id: 'demo-dunes' }, rails: [
-        { id: 'trending', label: lang === 'vi' ? 'Đang được quan tâm' : 'Trending now', items: mapList(trending, 'movie', lang) },
-        { id: 'movies', label: lang === 'vi' ? 'Phim nổi bật' : 'Featured movies', items: mapList(movies, 'movie', lang) },
-        { id: 'series', label: lang === 'vi' ? 'Series phổ biến' : 'Popular series', items: mapList(series, 'tv', lang) },
+      const trendingItems = mapList(trending, 'movie', lang);
+      const movieItems = mapList(movies, 'movie', lang);
+      const seriesItems = mapList(series, 'tv', lang);
+      const fallback = { id: 'demo-dunes', mediaType: 'movie', title: 'Dune: Part Two', releaseYear: 2024, rating: 8.2, overview: 'Demo', genres: ['Sci-Fi'], posterUrl: null, backdropUrl: null, runtimeMinutes: 166 };
+      return { source: 'tmdb', hero: trendingItems[0] || movieItems[0] || fallback, rails: [
+        { id: 'trending', label: lang === 'vi' ? 'Đang được quan tâm' : 'Trending now', items: trendingItems },
+        { id: 'movies', label: lang === 'vi' ? 'Phim nổi bật' : 'Featured movies', items: movieItems },
+        { id: 'series', label: lang === 'vi' ? 'Series phổ biến' : 'Popular series', items: seriesItems },
       ] };
     } catch {
-      return { source: 'demo', hero: { id: 'demo-dunes', title: 'Dune: Part Two', rating: 8.2 }, rails: [{ id: 'popular', items: [] }] };
+      const fallback = { id: 'demo-dunes', mediaType: 'movie', title: 'Dune: Part Two', releaseYear: 2024, rating: 8.2, overview: 'Demo', genres: ['Sci-Fi'], posterUrl: null, backdropUrl: null, runtimeMinutes: 166 };
+      return { source: 'demo', hero: fallback, rails: [{ id: 'popular', label: lang === 'vi' ? 'Được chọn cho bạn' : 'Picked for you', items: [fallback] }] };
     }
   }
 
