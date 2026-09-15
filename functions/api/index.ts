@@ -1,3 +1,5 @@
+import superjson from "superjson/dist/esm/index.js";
+
 export async function onRequest({ request }) {
   const url = new URL(request.url);
   const path = url.pathname;
@@ -111,8 +113,6 @@ async function handleTrpc(request, url) {
   const operation = url.pathname.replace(/^\/api\/trpc\//, '').replace(/\/$/, '');
   const isBatch = url.searchParams.get('batch') === '1';
 
-  // tRPC's httpBatchLink uses GET for queries. The input is a JSON object
-  // keyed by batch index, e.g. {"0":{"json":{"locale":"vi"}}}.
   let input = {};
   try {
     if (request.method === 'GET') {
@@ -122,7 +122,7 @@ async function handleTrpc(request, url) {
       const body = await request.json();
       input = body?.input ?? body;
     } else {
-      return new Response(JSON.stringify({ error: { message: 'Method not allowed' } }), {
+      return new Response(JSON.stringify({ error: { code: -32603, message: 'Method not allowed' } }), {
         status: 405,
         headers: { 'Content-Type': 'application/json', Allow: 'GET, POST' },
       });
@@ -137,13 +137,13 @@ async function handleTrpc(request, url) {
       else if (operation === 'catalog.byId') data = await findTitle(query.id);
       else if (operation === 'catalog.similar') data = await findSimilar(query.id);
       else data = [];
-      return { result: { data } };
+      return { result: { data: superjson.serialize(data) } };
     }));
 
     const payload = isBatch || Object.keys(entries).length > 1 ? results : results[0];
     return new Response(JSON.stringify(payload), { headers: { 'Content-Type': 'application/json', 'cache-control': 'no-store' } });
   } catch (e) {
-    return new Response(JSON.stringify({ error: { message: e instanceof Error ? e.message : String(e) } }), {
+    return new Response(JSON.stringify({ error: { code: -32603, message: e instanceof Error ? e.message : String(e) } }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
