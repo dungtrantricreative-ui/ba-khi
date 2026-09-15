@@ -11,7 +11,7 @@ export async function onRequest({ request }) {
   }
 
   // Handle /api/trpc
-  if (path === '/api/trpc') {
+  if (path === '/api/trpc' || path.startsWith('/api/trpc/')) {
     return handleTrpc(request, url);
   }
 
@@ -24,10 +24,6 @@ export async function onRequest({ request }) {
 }
 
 async function handleTrpc(request, url) {
-  if (request.method !== 'POST') {
-    return new Response(JSON.stringify({}), { status: 405, headers: { 'Content-Type': 'application/json' } });
-  }
-
   const TMDB_API = 'https://api.themoviedb.org/3';
   const TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZmMyYzhkNTgwZjNiNDk1ODJhYzlmYWQ2MGQwYjUxZiIsIm5iZiI6MTc4NzU0MzM4Ni41OTgsInN1YiI6IjZhOGJiZjVhZGE2YmYxNTM5YWMwZWJkYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.uTk9LAYIiwJsoGj1bIboQ0IIklWw_R9SdG-lm-AB2zI';
 
@@ -112,29 +108,45 @@ async function handleTrpc(request, url) {
     } catch { return []; }
   }
 
-  try {
-    const body = await request.json();
-    const method = body?.method || body?.input?.method;
-    const params = body?.params || body?.input?.params || {};
-    const query = params?.query || {};
-    const pathParam = query?.id;
+  const operation = url.pathname.replace(/^\/api\/trpc\//, '').replace(/\/$/, '');
+  const isBatch = url.searchParams.get('batch') === '1';
 
-    if (method === 'catalog.home') {
-      return new Response(JSON.stringify({ result: { data: await homeCatalog() }, json: true }), { headers: { 'Content-Type': 'application/json' } });
+  // tRPC's httpBatchLink uses GET for queries. The input is a JSON object
+  // keyed by batch index, e.g. {"0":{"json":{"locale":"vi"}}}.
+  let input = {};
+  try {
+    if (request.method === 'GET') {
+      const rawInput = url.searchParams.get('input');
+      if (rawInput) input = JSON.parse(rawInput);
+    } else if (request.method === 'POST') {
+      const body = await request.json();
+      input = body?.input ?? body;
+    } else {
+      return new Response(JSON.stringify({ error: { message: 'Method not allowed' } }), {
+        status: 405,
+        headers: { 'Content-Type': 'application/json', Allow: 'GET, POST' },
+      });
     }
-    if (method === 'catalog.search') {
-      return new Response(JSON.stringify({ result: { data: await searchTitles(query?.query || '') }, json: true }), { headers: { 'Content-Type': 'application/json' } });
-    }
-    if (method === 'catalog.byId' && pathParam) {
-      const title = await findTitle(pathParam);
-      return title ? new Response(JSON.stringify({ result: { data: title }, json: true }), { headers: { 'Content-Type': 'application/json' } }) : new Response(JSON.stringify({ error: 'title_not_found' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
-    }
-    if (method === 'catalog.similar' && pathParam) {
-      return new Response(JSON.stringify({ result: { data: await findSimilar(pathParam) }, json: true }), { headers: { 'Content-Type': 'application/json' } });
-    }
-    return new Response(JSON.stringify({ result: { data: [] }, json: true }), { headers: { 'Content-Type': 'application/json' } });
+
+    const entries = isBatch || (input && typeof input === 'object' && input['0']) ? input : { '0': input };
+    const results = await Promise.all(Object.keys(entries).map(async key => {
+      const query = entries[key]?.json ?? entries[key] ?? {};
+      let data;
+      if (operation === 'catalog.home') data = await homeCatalog(query.locale === 'en' ? 'en' : 'vi');
+      else if (operation === 'catalog.search') data = await searchTitles(query.query || '');
+      else if (operation === 'catalog.byId') data = await findTitle(query.id);
+      else if (operation === 'catalog.similar') data = await findSimilar(query.id);
+      else data = [];
+      return { result: { data } };
+    }));
+
+    const payload = isBatch || Object.keys(entries).length > 1 ? results : results[0];
+    return new Response(JSON.stringify(payload), { headers: { 'Content-Type': 'application/json', 'cache-control': 'no-store' } });
   } catch (e) {
-    return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: { 'Content-Type': 'application/json' } });
+    return new Response(JSON.stringify({ error: { message: e instanceof Error ? e.message : String(e) } }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }
 
