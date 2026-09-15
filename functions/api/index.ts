@@ -72,10 +72,10 @@ async function handleTrpc(request, url) {
       const trendingItems = mapList(trending, 'movie', 'vi');
       const movieItems = mapList(movies, 'movie', 'vi');
       const seriesItems = mapList(series, 'tv', 'vi');
-      return { source: 'tmdb', hero: trendingItems[0] || movieItems[0] || { id: 'demo-dunes', mediaType: 'movie', title: 'Dune: Part Two', releaseYear: 2024, rating: 8.2, overview: 'Demo', genres: ['Sci-Fi'], posterUrl: '/manus-storage/novaflix-hero-user_4c631c9a.jpg', backdropUrl: '/manus-storage/novaflix-hero-user_4c631c9a.jpg', runtimeMinutes: 166 }, rails: [
-        { id: 'trending', label: 'Đang được quan tâm', items: trendingItems },
+      return { source: 'tmdb', hero: movieItems[0] || trendingItems[0] || { id: 'demo-dunes', mediaType: 'movie', title: 'Dune: Part Two', releaseYear: 2024, rating: 8.2, overview: 'Demo', genres: ['Sci-Fi'], posterUrl: '/manus-storage/novaflix-hero-user_4c631c9a.jpg', backdropUrl: '/manus-storage/novaflix-hero-user_4c631c9a.jpg', runtimeMinutes: 166 }, rails: [
         { id: 'movies', label: 'Phim nổi bật', items: movieItems },
         { id: 'series', label: 'Series phổ biến', items: seriesItems },
+        { id: 'trending', label: 'Đang được quan tâm', items: trendingItems },
       ] };
     } catch {
       return { source: 'demo', hero: { id: 'demo-dunes', mediaType: 'movie', title: 'Dune: Part Two', releaseYear: 2024, rating: 8.2, overview: 'Demo', genres: ['Sci-Fi'], posterUrl: '/manus-storage/novaflix-hero-user_4c631c9a.jpg', backdropUrl: '/manus-storage/novaflix-hero-user_4c631c9a.jpg', runtimeMinutes: 166 }, rails: [
