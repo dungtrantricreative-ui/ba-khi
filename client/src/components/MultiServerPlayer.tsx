@@ -137,7 +137,7 @@ export function MultiServerPlayer({ title }: { title: TitleDetails }) {
         <div className="player-topbar">
           <Link href={`/title/${title.id}`} className="player-back"><ArrowLeft size={17} /> {t("player.back")}</Link>
           <span>{title.title}{currentEpisode ? ` · ${t("player.episode")} ${currentEpisode.episodeNumber}: ${currentEpisode.name}` : ""}</span>
-          <span className="player-source">{activeServer.name}</span>
+          <span className="player-source">{t("server.n", { n: serverIndex + 1 })}</span>
           <button
             type="button"
             className={cinemaMode ? "cinema-button cinema-button--on" : "cinema-button"}
@@ -175,7 +175,7 @@ export function MultiServerPlayer({ title }: { title: TitleDetails }) {
             </>
             : <div className="player-overlay"><Loader2 className="animate-spin" size={25} /><span>{t("player.building")}</span></div>}
         </div>
-        <p className="player-note">{t("player.via", { server: activeServer.name })}</p>
+        <p className="player-note">{t("player.via")}</p>
       </section>
 
       <div className="server-tabs" role="tablist" aria-label={t("servers.aria")}>
@@ -193,7 +193,7 @@ export function MultiServerPlayer({ title }: { title: TitleDetails }) {
             onClick={() => { failedServersRef.current.delete(index); setFailedServers(Array.from(failedServersRef.current)); setServerIndex(index); }}
           >
             {failedServers.includes(index) && index !== serverIndex ? <AlertTriangle size={12} /> : null}
-            {t("server.n", { n: index + 1 })}<small>{server.name}</small>
+            {t("server.n", { n: index + 1 })}
           </button>
         ))}
       </div>
