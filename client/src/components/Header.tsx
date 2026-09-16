@@ -12,7 +12,7 @@ export function Header() {
   const linkClass = (href: string) => (navClass(href) ? "nav-link--active" : "");
 
   return (
-    <header className="site-header liquid-lens">
+    <header className="site-header">
       <div className="site-header__inner">
         <Link href="/" className="wordmark" aria-label={t("wordmark.aria")}>SIMPAPA</Link>
         <nav className={`main-nav ${isOpen ? "main-nav--open" : ""}`} aria-label={t("nav.aria")}>

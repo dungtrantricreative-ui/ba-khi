@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense } from "react";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -31,51 +31,6 @@ function Router() {
   );
 }
 
-declare global {
-  interface Window {
-    liquidGL?: (options: Record<string, unknown>) => unknown;
-  }
-}
-
-function LiquidGlassRuntime() {
-  useEffect(() => {
-    let cancelled = false;
-    const existing = document.querySelector<HTMLScriptElement>('script[data-liquidgl="engine"]');
-    const script = existing ?? document.createElement("script");
-    script.src = "/liquidGL.js";
-    script.defer = true;
-    script.dataset.liquidgl = "engine";
-
-    const initialise = () => {
-      if (cancelled || !window.liquidGL) return;
-      window.liquidGL({
-        engine: "auto",
-        snapshot: "body",
-        target: ".liquid-lens",
-        resolution: Math.min(1.5, window.devicePixelRatio || 1),
-        refraction: 0.018,
-        aberration: 0.16,
-        bevelDepth: 0.12,
-        bevelWidth: 0.18,
-        frost: 1.2,
-        shadow: true,
-        specular: true,
-        reveal: "fade",
-        tilt: false,
-      });
-    };
-
-    if (existing) initialise();
-    else {
-      script.addEventListener("load", initialise, { once: true });
-      document.head.appendChild(script);
-    }
-    return () => { cancelled = true; };
-  }, []);
-
-  return null;
-}
-
 // NOTE: About Theme
 // - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
 //   to keep consistent foreground/background color across components
@@ -88,7 +43,6 @@ function App() {
         <LanguageProvider>
           <TooltipProvider>
             <Toaster />
-            <LiquidGlassRuntime />
             <Router />
           </TooltipProvider>
         </LanguageProvider>
