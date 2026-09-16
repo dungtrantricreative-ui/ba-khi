@@ -1,4 +1,4 @@
-import { Globe2, Languages, Menu, Search as Magnifier, X } from "lucide-react";
+import { Globe2, Menu, Search as Magnifier, Settings as SettingsIcon, X } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useLanguage } from "@/lib/i18n";
@@ -7,7 +7,7 @@ import { LiveSearch } from "./LiveSearch";
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [location, navigate] = useLocation();
-  const { locale, setLocale, t } = useLanguage();
+  const { t } = useLanguage();
   const navClass = (href: string) => (href === "/" ? location === "/" : location.startsWith(href));
   const linkClass = (href: string) => (navClass(href) ? "nav-link--active" : "");
 
@@ -31,15 +31,7 @@ export function Header() {
           >
             <Magnifier size={17} />
           </button>
-          <button
-            type="button"
-            className="lang-toggle"
-            title={t("lang.toggleTitle")}
-            aria-label={t("lang.toggleTitle")}
-            onClick={() => setLocale(locale === "vi" ? "en" : "vi")}
-          >
-            <Languages size={15} /> {locale === "vi" ? "EN" : "VI"}
-          </button>
+          <Link className="settings-link" href="/settings" aria-label={t("settings.openAria")} title={t("settings.openAria")}><SettingsIcon size={17} /><span>{t("nav.settings")}</span></Link>
           <span className="access-pill" title={t("pill.public")}><Globe2 size={14} /> Public</span>
           <button className="icon-button mobile-only" type="button" onClick={() => setIsOpen(open => !open)} aria-label={isOpen ? t("nav.closeAria") : t("nav.openAria")}>{isOpen ? <X size={20} /> : <Menu size={20} />}</button>
         </div>

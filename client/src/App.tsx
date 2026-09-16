@@ -10,6 +10,7 @@ import { useLanguage, LanguageProvider } from "./lib/i18n";
 const Home = lazy(() => import("./pages/Home"));
 const SearchPage = lazy(() => import("./pages/Search"));
 const Credits = lazy(() => import("./pages/Credits"));
+const Settings = lazy(() => import("./pages/Settings"));
 const Detail = lazy(() => import("./pages/Detail"));
 const Watch = lazy(() => import("./pages/Watch"));
 
@@ -21,6 +22,7 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path="/search" component={SearchPage} />
       <Route path="/credits" component={Credits} />
+      <Route path="/settings" component={Settings} />
       <Route path="/title/:id">{params => <Detail id={params.id} />}</Route>
       <Route path="/watch/:id">{params => <Watch id={params.id} />}</Route>
       <Route path={"/404"} component={NotFound} />
