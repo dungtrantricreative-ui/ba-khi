@@ -483,7 +483,6 @@ body {
 .credits-page .credits-card p { color: #e8edf6; text-shadow: 0 1px 8px rgba(0,0,0,.28); }
 .credits-page .credits-card a { color: #ffffff; }
 
-/* liquidGL canvas sits behind the live content while its shader refracts the page snapshot. */
 .liquid-lens { isolation: isolate; }
 .liquid-lens > canvas { border-radius: inherit; pointer-events: none; }
 .liquid-lens > :not(canvas) { position: relative; z-index: 2; }
