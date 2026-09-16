@@ -11,7 +11,7 @@ export function CastList({ cast }: { cast: CastMember[] }) {
         {cast.map(person => (
           <article key={person.id} className="cast-card glass">
             {person.profileUrl
-              ? <img className="cast-card__photo" src={person.profileUrl} alt="" loading="lazy" />
+              ? <img className="cast-card__photo" src={person.profileUrl} alt="" loading="lazy" decoding="async" />
               : <span className="cast-card__photo cast-card__fallback">{person.name.charAt(0)}</span>}
             <strong>{person.name}</strong>
             {person.character && <span>{person.character}</span>}
